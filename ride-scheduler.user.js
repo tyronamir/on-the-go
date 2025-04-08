@@ -3,12 +3,13 @@
 // @namespace    http://tampermonkey.net/
 // @version      6.0
 // @description  Mobile → tabla Excel + botón Sort (Today/Week). Desktop → layout original (solo lógica). Persistente con MutationObserver.
-// @author       on-the-go
+// @author       tyronamir
 // @match        https://onthego.ridescheduler.com/Scheduler/My?view=table&Title=Rides+Assigned+To+Me
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/on-the-go/rides-smiles/main/ride-scheduler.user.js
-// @downloadURL  https://raw.githubusercontent.com/on-the-go/rides-smiles/main/ride-scheduler.user.js
+// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.js
+// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.js
 // ==/UserScript==
+
 
 const RealDate = Date;
 
