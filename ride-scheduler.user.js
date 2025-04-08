@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RideScheduler – Excel view + Sort filter (Today & Week) + MutationObserver
 // @namespace    http://tampermonkey.net/
-// @version      6.0
+// @version      6.1
 // @description  Mobile → tabla Excel + botón Sort (Today/Week). Desktop → layout original (solo lógica). Persistente con MutationObserver.
 // @author       tyronamir
 // @match        https://onthego.ridescheduler.com/Scheduler/My?view=table&Title=Rides+Assigned+To+Me
@@ -9,6 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.js
 // @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.js
 // ==/UserScript==
+
 
 
 const RealDate = Date;
@@ -723,6 +724,37 @@ function init() {
 }
 
 })();
+
+    /***************************************************************************
+ *                                                                         *
+ *     7) AUTO-CHECK de nuevas versiones cada vez que se abra la página    *
+ *                                                                         *
+ ***************************************************************************/
+
+(function autoForceUpdateCheck() {
+  const lastCheck = localStorage.getItem('rsLastUpdateCheck') || 0;
+  const now = Date.now();
+  const ONE_HOUR = 3600000;
+
+  if (now - lastCheck > ONE_HOUR) {
+    localStorage.setItem('rsLastUpdateCheck', now.toString());
+
+    // URL de actualización definida en el metablock
+    const url = 'https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.js';
+
+    fetch(url)
+      .then(res => res.text())
+      .then(newCode => {
+        const currentVersion = '6.1';  // ← actualízalo cuando cambies el metablock
+        const match = newCode.match(/@version\s+([^\s]+)/);
+        if (match && match[1] && match[1] !== currentVersion) {
+          alert(`🚀 ¡Nueva versión disponible! (${match[1]})\nVe al Dashboard de Tampermonkey para actualizar.`);
+        }
+      })
+      .catch(console.error);
+  }
+})();
+
 
 
 
