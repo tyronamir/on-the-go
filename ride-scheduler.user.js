@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         RideScheduler – Excel view + Sort filter (Today & Week) + MutationObserver
 // @namespace    http://tampermonkey.net/
-// @version      6.2
+// @version      6.7
 // @description  Mobile → tabla Excel + botón Sort (Today/Week). Desktop → layout original (solo lógica). Persistente con MutationObserver.
 // @author       tyronamir
 // @match        https://onthego.ridescheduler.com/Scheduler/My?view=table&Title=Rides+Assigned+To+Me
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.2.js
-// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.2.js
+// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.7.js
+// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.7.js
 // ==/UserScript==
 
 
@@ -487,34 +487,28 @@ function printCSS() {
     // Transforma un .scheduler-row-block
    // Transforma un .scheduler-row-block
 function transformBlock(block) {
-  // Evitar retransformar
   if (block.dataset.transformed) return;
 
-  // Eliminar Drivers
   block.querySelectorAll('.fancy-scroll').forEach(b => {
     const label = b.querySelector('label')?.textContent.trim();
     if (label === 'Drivers') b.remove();
   });
 
-  // Eliminar R&S_Category
   block.querySelector('[id^="field-block-"]')?.parentElement?.remove();
 
-  // Desktop: convertir direcciones (espacio extra), pero no cambiar layout
   if (!isMobile) {
     block.querySelectorAll('.stop-block').forEach(convertStops);
     block.dataset.transformed = 'desktop';
     return;
   }
 
-  // Móvil → construir tabla Excel
   block.querySelectorAll('.stop-block').forEach(convertStops);
 
   const dateTxt = block.querySelector('[data-eventmini-id]')?.innerText.replace(/\n/g, ' ') || '';
-  const rider   = block.querySelector('.person-name')?.textContent.trim() || '';
-  const msg     = block.querySelector('.message-window-edit')?.innerText.replace(/\n/g, ' ') || '';
-  const stops   = [...block.querySelectorAll('.stop-block')];
+  const riderName = block.querySelector('.person-name')?.textContent.trim() || '';
+  const msg = block.querySelector('.message-window-edit')?.innerText.replace(/\n/g, ' ') || '';
+  const stops = [...block.querySelectorAll('.stop-block')];
 
-  // NUEVO: Obtener teléfono del primer stop-block (si existe)
   let riderPhoneText = '[sin teléfono]';
   let riderPhoneHref = '';
   if (stops[0]) {
@@ -525,28 +519,28 @@ function transformBlock(block) {
     }
   }
 
+  const riderHTML = riderPhoneHref
+    ? `${riderName}<br><a href="${riderPhoneHref}" style="color:#0a58ca">${riderPhoneText}</a>`
+    : `${riderName}<br><span style="color:#999">${riderPhoneText}</span>`;
+
   const tableHTML = `
     <div data-transformed="mobile" style="width:100%; margin-bottom:10px;">
       <table style="width:100%; border-collapse:collapse; border:1px solid #ccc;
-                    font-size:13px; table-layout:fixed; margin:12px 0">
+                    font-size:13px; table-layout:fixed; margin:12px 0; word-wrap:break-word;">
         <thead style="background:#f5f5f5">
           <tr>
             <th style="border:1px solid #ccc; padding:6px; width:18%">Date</th>
-            <th style="border:1px solid #ccc; padding:6px; width:15%">Rider</th>
-            <th style="border:1px solid #ccc; padding:6px; width:15%">Phone</th>
-            <th style="border:1px solid #ccc; padding:6px; width:25%">Message</th>
-            ${stops[0] ? '<th style="border:1px solid #ccc; padding:6px; width:15%">Pickup</th>' : ''}
-            ${stops[1] ? '<th style="border:1px solid #ccc; padding:6px; width:15%">Destination</th>' : ''}
+            <th style="border:1px solid #ccc; padding:6px; width:20%">Rider</th>
+            <th style="border:1px solid #ccc; padding:6px; width:22%">Message</th>
+            ${stops[0] ? '<th style="border:1px solid #ccc; padding:6px; width:20%">Pickup</th>' : ''}
+            ${stops[1] ? '<th style="border:1px solid #ccc; padding:6px; width:20%">Destination</th>' : ''}
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word">${dateTxt}</td>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word">${rider}</td>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word">
-              ${riderPhoneHref ? `<a href="${riderPhoneHref}" style="color:#0a58ca">${riderPhoneText}</a>` : '[sin teléfono]'}
-            </td>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word">${msg}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${dateTxt}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${riderHTML}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${msg}</td>
             ${stops.map(createStopCell).join('')}
           </tr>
         </tbody>
