@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         RideScheduler – Excel view + Sort filter (Today & Week) + MutationObserver
 // @namespace    http://tampermonkey.net/
-// @version      6.3
+// @version      6.4
 // @description  Mobile → tabla Excel + botón Sort (Today/Week). Desktop → layout original (solo lógica). Persistente con MutationObserver.
 // @author       tyronamir
 // @match        https://onthego.ridescheduler.com/Scheduler/My?view=table&Title=Rides+Assigned+To+Me
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.3.js
-// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.3.js
+// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.4.js
+// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.4.js
 // ==/UserScript==
 
 
