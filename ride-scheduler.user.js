@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         RideScheduler – Excel view + Sort filter (Today & Week) + MutationObserver
 // @namespace    http://tampermonkey.net/
-// @version      6.5
+// @version      6.6
 // @description  Mobile → tabla Excel + botón Sort (Today/Week). Desktop → layout original (solo lógica). Persistente con MutationObserver.
 // @author       tyronamir
 // @match        https://onthego.ridescheduler.com/Scheduler/My?view=table&Title=Rides+Assigned+To+Me
 // @grant        none
-// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.5.js
-// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.5.js
+// @updateURL    https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.6.js
+// @downloadURL  https://raw.githubusercontent.com/tyronamir/on-the-go/main/ride-scheduler.user.6.6.js
 // ==/UserScript==
 
 
@@ -524,23 +524,23 @@ function transformBlock(block) {
     : `${riderName}<br><span style="color:#999">${riderPhoneText}</span>`;
 
   const tableHTML = `
-    <div data-transformed="mobile" style="width:100%; margin-bottom:10px;">
+    <div data-transformed="mobile" style="width:100%; margin-bottom:14px;">
       <table style="width:100%; border-collapse:collapse; border:1px solid #ccc;
-                    font-size:13px; table-layout:fixed; margin:12px 0; word-wrap:break-word;">
-        <thead style="background:#f5f5f5">
+                    font-size:14px; table-layout:fixed; margin:12px 0; word-wrap:break-word;">
+        <thead style="background:#f5f5f5;">
           <tr>
             <th style="border:1px solid #ccc; padding:6px; width:18%">Date</th>
-            <th style="border:1px solid #ccc; padding:6px; width:20%">Rider</th>
-            <th style="border:1px solid #ccc; padding:6px; width:22%">Message</th>
+            <th style="border:1px solid #ccc; padding:6px; width:22%">Rider</th>
+            <th style="border:1px solid #ccc; padding:6px; width:20%">Message</th>
             ${stops[0] ? '<th style="border:1px solid #ccc; padding:6px; width:20%">Pickup</th>' : ''}
             ${stops[1] ? '<th style="border:1px solid #ccc; padding:6px; width:20%">Destination</th>' : ''}
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${dateTxt}</td>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${riderHTML}</td>
-            <td style="border:1px solid #ccc; padding:6px; word-break:break-word;">${msg}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word; vertical-align:top;">${dateTxt}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word; vertical-align:top;">${riderHTML}</td>
+            <td style="border:1px solid #ccc; padding:6px; word-break:break-word; vertical-align:top;">${msg}</td>
             ${stops.map(createStopCell).join('')}
           </tr>
         </tbody>
